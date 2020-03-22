@@ -1,0 +1,2 @@
+rootProject.name='Infection-ServiceDiscovery'
+include ':app'

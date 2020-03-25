@@ -15,6 +15,7 @@
         android:name="android.permission.INTERNET"
         android:required="true" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:allowBackup="false"
@@ -40,10 +41,9 @@
             </intent-filter>
         </receiver>
 
-        <receiver
-            android:name="com.example.infection.receivers.AlarmReceiver"
-            android:process=":remote" />
+        <receiver android:name=".receivers.IsCuredAlarmReceiver" />
 
+        <service android:name=".services.ForegroundServiceManager" />
     </application>
 
 </manifest>

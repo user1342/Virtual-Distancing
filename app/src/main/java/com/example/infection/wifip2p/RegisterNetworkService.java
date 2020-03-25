@@ -24,15 +24,16 @@ public class RegisterNetworkService {
 
     /**
      * When consytrcuted we attempt to un-register other network services, however, this will often fail.
+     *
      * @param context
      */
     public RegisterNetworkService(Context context) {
         this.context = context;
-        unregisterService();
     }
 
     /**
      * Registering a service
+     *
      * @param port
      * @param state
      */
@@ -66,7 +67,13 @@ public class RegisterNetworkService {
             try {
                 nsdManager.unregisterService(registrationListener);
             } catch (Exception e) {
-                // listener doesn't exist so can't remove
+                if (BuildConfig.DEBUG) {
+                    Log.v(BuildConfig.APPLICATION_ID, "Failed To De-Register Network Service");
+                }
+
+                // Means that listener is still probably there but we no-longer have a reference to it.
+                // This means that if we call garbage collection it should be removed... in theory.
+                System.gc();
             }
         }
     }
@@ -97,14 +104,16 @@ public class RegisterNetworkService {
             public void onServiceRegistered(NsdServiceInfo NsdServiceInfo) {
 
                 serviceName = NsdServiceInfo.getServiceName();
-                Log.v(BuildConfig.APPLICATION_ID, "Registration of Network Service " + serviceName);
+
+                Log.i(BuildConfig.APPLICATION_ID, "Registration of Network Service " + serviceName);
+
             }
 
             @Override
             public void onRegistrationFailed(NsdServiceInfo serviceInfo, int errorCode) {
                 // Registration failed! Put debugging code here to determine why.
 
-                Log.v(BuildConfig.APPLICATION_ID, "Registration Failed: "+ errorCode);
+                Log.e(BuildConfig.APPLICATION_ID, "Registration Failed: " + errorCode);
 
             }
 
@@ -112,13 +121,17 @@ public class RegisterNetworkService {
             public void onServiceUnregistered(NsdServiceInfo arg0) {
                 // Service has been unregistered. This only happens when you call
                 // NsdManager.unregisterService() and pass in this listener.
-                Log.v(BuildConfig.APPLICATION_ID, "Uregistered Network Service Server");
+                if (BuildConfig.DEBUG) {
+                    Log.v(BuildConfig.APPLICATION_ID, "De-registered Network Service Server");
+                }
             }
 
             @Override
             public void onUnregistrationFailed(NsdServiceInfo serviceInfo, int errorCode) {
                 // Unregistration failed. Put debugging code here to determine why.
-                Log.v(BuildConfig.APPLICATION_ID, "Unregistering of Network Service Failed");
+                if (BuildConfig.DEBUG) {
+                    Log.v(BuildConfig.APPLICATION_ID, "Unregistering of Network Service Failed");
+                }
             }
         };
     }

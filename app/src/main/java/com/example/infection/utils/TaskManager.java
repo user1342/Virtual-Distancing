@@ -1,14 +1,13 @@
 package com.example.infection.utils;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.os.Build;
+import android.util.Log;
 
 import com.example.infection.BuildConfig;
 import com.example.infection.R;
-import com.example.infection.receivers.AlarmReceiver;
+import com.example.infection.services.ForegroundServiceManager;
 import com.example.infection.wifip2p.DiscoverServices;
 import com.example.infection.wifip2p.RegisterNetworkService;
 
@@ -18,48 +17,40 @@ import com.example.infection.wifip2p.RegisterNetworkService;
 public class TaskManager {
 
     /**
-     * The constrcutor.
-     * @param context
-     */
-    private void initAlarmManager(Context context) {
-
-        // Construct an intent that will execute the AlarmReceiver
-        Intent intent = new Intent(context, AlarmReceiver.class);
-
-        // Create a PendingIntent to be triggered when the alarm goes off
-        final PendingIntent pIntent = PendingIntent.getBroadcast(context, AlarmReceiver.REQUEST_CODE,
-                intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        // Setup periodic alarm every minute from this point onwards
-        long firstMillis = System.currentTimeMillis(); // alarm is set right away
-        AlarmManager alarm = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-
-        if (alarm != null) {
-            alarm.setInexactRepeating(AlarmManager.RTC_WAKEUP, firstMillis,
-                    1 * 60 * 1000, pIntent);
-        }
-    }
-
-    /**
      * This sets up the alarm manager.
+     *
      * @param context
      */
     public void initialiseWork(Context context) {
 
-        initAlarmManager(context);
+        Intent i = new Intent(context, ForegroundServiceManager.class);
+        // Start the service
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (BuildConfig.DEBUG) {
+                Log.v(BuildConfig.APPLICATION_ID, "Starting Foreground Service");
+            }
+            context.startForegroundService(i);
+        } else {
+            if (BuildConfig.DEBUG) {
+                Log.v(BuildConfig.APPLICATION_ID, "Starting Background Service");
+            }
+            context.startService(i);
+        }
+
     }
 
     /**
      * Starts network service discovery and starts up a service.
+     *
      * @param context
      */
     public void run(Context context) {
 
-        // Gets the current state from shared pref and adds that to register a service.
-        SharedPreferences sharedPref = context.getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
-        String state = sharedPref.getString(StringEnum.STATE_SHARED_PREF_KEY.getString(), context.getString(R.string.clean_tag)); //Defaults to clean if doesn't have one.
+        // Irrespective of state unregisters the current network service.
+        RegisterNetworkService registerNetworkService = new RegisterNetworkService(context);
+        registerNetworkService.unregisterService();
 
-
+        String state = InfectedStateManager.getCurrentState(context); //Defaults to clean if doesn't have one.
 
         // If we're clean then we need to look for other networks, if we're infected we need to create a network.
         if (state.equals(context.getString(R.string.clean_tag))) {
@@ -67,11 +58,10 @@ public class TaskManager {
             discoverServices.initializeDiscoveryListener();
             discoverServices.discover();
             discoverServices.removeDiscoveryListener();
-        } else{
-            RegisterNetworkService resisterNetworkService = new RegisterNetworkService(context);
-            resisterNetworkService.initializeServerSocket();
-            resisterNetworkService.initializeRegistrationListener();
-            resisterNetworkService.registerService(resisterNetworkService.localPort, state);
+        } else if (state.equals(context.getString(R.string.infected_tag))) {
+            registerNetworkService.initializeServerSocket();
+            registerNetworkService.initializeRegistrationListener();
+            registerNetworkService.registerService(registerNetworkService.localPort, state);
         }
 
 

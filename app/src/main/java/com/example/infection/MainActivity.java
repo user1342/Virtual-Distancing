@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,7 +16,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.example.infection.utils.InfectedStateManager;
+import com.example.infection.utils.MultipleUse;
 import com.example.infection.utils.TaskManager;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * The main activity of the application. The UI has one main view, of which is a textview, detailing the state (infected, or clean) of the player.
@@ -30,15 +35,21 @@ public class MainActivity extends AppCompatActivity {
     /**
      * A dynamically defined local broadcast receiver, used for updating the UI.
      */
-    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+    public BroadcastReceiver updateUiBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+
+            if (BuildConfig.DEBUG) {
+                Log.v(BuildConfig.APPLICATION_ID, "Received Local Broadcast Receiver");
+            }
+
             updateUi();
         }
     };
 
     /**
      * Used to update the UI based on changes.
+     *
      * @param hasFocus
      */
     @Override
@@ -51,20 +62,27 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Sets up a local broadcast receiver and starts the tasker.
+     *
      * @param savedInstanceState
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //Sets up local broadcast receiver
-        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter(BuildConfig.APPLICATION_ID));
+        // Notification channel used throughout the app.
+        MultipleUse.createNotificationChannel(getApplicationContext());
 
-        // Tasks work, this involves setting up a network service and polling for other services.
+        //Sets up local broadcast receiver used for updating the UI.
+        LocalBroadcastManager.getInstance(this).registerReceiver(updateUiBroadcastReceiver, new IntentFilter(BuildConfig.APPLICATION_ID));
+
+        // This sets up a foreground service.
         TaskManager taskManager = new TaskManager();
         taskManager.initialiseWork(getApplicationContext());
-        //taskManager.run(getApplicationContext());
+    }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 
     // Makes the application view full screen.
@@ -88,10 +106,9 @@ public class MainActivity extends AppCompatActivity {
         hideSystemUI();
         setContentView(R.layout.activity_main);
 
-        // Gets current state
-        //todo is the null here why.
-        InfectedStateManager infectedStateManager = new InfectedStateManager(MainActivity.this, null, true);
-        final String state = infectedStateManager.getCurrentState();
+        // Gets current state which is used for updating the Ui elements
+        final InfectedStateManager infectedStateManager = new InfectedStateManager(getApplicationContext());
+        final String state = InfectedStateManager.getCurrentState(getApplicationContext());
 
         TextView textView = (TextView) findViewById(R.id.textView);
         textView.setText(state.toUpperCase());
@@ -101,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
             textView.setTextColor(Color.GREEN);
             textView.setTextSize(80);
             getWindow().getDecorView().setBackgroundColor(Color.WHITE);
-        } else if (state.equals(getString(R.string.infected_tag))){
+        } else if (state.equals(getString(R.string.infected_tag))) {
             textView.setTextColor(Color.RED);
             textView.setTextSize(60);
             getWindow().getDecorView().setBackgroundColor(Color.BLACK);
@@ -115,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
                 // Only runs the below if the user isn't already infected.
                 if (!state.equals(getString(R.string.infected_tag))) {
 
-                    // decreases a value, giving the user an option to stop self-infecting.
+                    // decreases a value, giving the user an option to stop self-infecting. If the value reaches ) the users state changes to infected.
                     if (clicksBeforeInfected > 1) {
                         clicksBeforeInfected = clicksBeforeInfected - 1;
 
@@ -125,17 +142,21 @@ public class MainActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), clicksBeforeInfected + getString(R.string.self_infect_multiple), Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        new InfectedStateManager(MainActivity.this, getString(R.string.infected_tag), false);
+                        infectedStateManager.setNewState(getString(R.string.infected_tag), false);
                         Toast.makeText(getApplicationContext(), getString(R.string.now_infected), Toast.LENGTH_SHORT).show();
                     }
                 } else {
 
                     // If cure is to happen in future let them know. Otherwise cure them.
                     if (InfectedStateManager.isCured(getApplicationContext())) {
-                        new InfectedStateManager(MainActivity.this, getString(R.string.clean_tag), true);
+                        infectedStateManager.setNewState(getString(R.string.clean_tag), true);
                         Toast.makeText(getApplicationContext(), getString(R.string.recoup_message), Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(getApplicationContext(), getString(R.string.wait_message) + " " + InfectedStateManager.getCuredDate(getApplicationContext()) + ".", Toast.LENGTH_SHORT).show();
+
+                        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+                        String curedDateAsString = formatter.format(new Date(InfectedStateManager.getCuredDate(getApplicationContext())));
+
+                        Toast.makeText(getApplicationContext(), getString(R.string.wait_message) + " " + curedDateAsString + ".", Toast.LENGTH_SHORT).show();
 
                     }
                 }

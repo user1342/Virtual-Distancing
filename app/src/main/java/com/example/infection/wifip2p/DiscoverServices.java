@@ -19,6 +19,7 @@ public class DiscoverServices {
 
     /**
      * Constrcutor
+     *
      * @param context
      */
     public DiscoverServices(Context context) {
@@ -65,8 +66,12 @@ public class DiscoverServices {
 
                 // One of our services has been found.
                 if (serviceName.startsWith(BuildConfig.APPLICATION_ID)) {
-                    Log.v(BuildConfig.APPLICATION_ID, "Found Service: " + serviceName);
-                    new InfectedStateManager(context, serviceName, false);
+                    if (BuildConfig.DEBUG) {
+                        Log.v(BuildConfig.APPLICATION_ID, "Found Service: " + serviceName);
+                    }
+
+                    InfectedStateManager infectedStateManager = new InfectedStateManager(context);
+                    infectedStateManager.setNewState(serviceName, false);
                 }
             }
 

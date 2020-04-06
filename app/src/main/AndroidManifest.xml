@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.infection">
+    package="me.jamesstevenson.infection">
 
     <uses-permission
         android:name="android.permission.ACCESS_FINE_LOCATION"
@@ -25,7 +25,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.example.infection.MainActivity"
+            android:name="me.jamesstevenson.infection.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -35,18 +35,18 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name="com.example.infection.receivers.BootBroadcastReceiver">
+        <receiver android:name="me.jamesstevenson.infection.receivers.BootBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".receivers.IsCuredAlarmReceiver" />
+        <receiver android:name="me.jamesstevenson.infection.receivers.IsCuredAlarmReceiver" />
         <receiver
-            android:name=".receivers.MainAlarmReceiver"
+            android:name="me.jamesstevenson.infection.receivers.MainAlarmReceiver"
             android:process=":remote" />
 
-        <service android:name=".services.ForegroundServiceManager" />
+        <service android:name="me.jamesstevenson.infection.services.ForegroundServiceManager" />
     </application>
 
 </manifest>

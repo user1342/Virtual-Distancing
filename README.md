@@ -11,6 +11,8 @@ The infection spreads between Android devices with **Wi-Fi enabled** and follows
 
 <p align="center"><img src="media\infection.gif" alt="Install Blocked Notification" width="400"/></p>
 
+Virtual Distancing can be used as a long range game of tag, capture the flag game, or as an educational tool to show how infection works.
+
 ## The Internals
 This application uses [WiFi Direct](https://developer.android.com/training/connect-devices-wirelessly/wifi-direct) (Also known as WiFiP2P) to find nearby devices up to 200 meters away. A device can be in one of two states, infected and clean. An infected device sets up a WifiP2P network service broadcasting that it is infected, while a clean device searches for these network services and if it finds one then also becomes infected. A foreground service is setup which listens for these nearby Network Services.
 

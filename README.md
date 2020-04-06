@@ -9,11 +9,6 @@ The infection spreads between Android devices with **Wi-Fi enabled** and follows
 - It can take up to a minute to contract.
 - Once contracted it takes two weeks to be cured.
 
-Virtual Distancing is a geo-location based game and educational
-tool designed around the concept of infection. This uses the Wifi
-Direct (a.k.a WiFiP2P) technology.
-
-
 <p align="center"><img src="media\infection.gif" alt="Install Blocked Notification" width="400"/></p>
 
 ## The Internals

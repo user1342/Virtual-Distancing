@@ -15,16 +15,13 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import me.jamesstevenson.infection.BuildConfig;
-import me.jamesstevenson.infection.R;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import me.jamesstevenson.infection.utils.InfectedStateManager;
 import me.jamesstevenson.infection.utils.MultipleUse;
 import me.jamesstevenson.infection.utils.TaskManager;
 import me.jamesstevenson.infection.wifip2p.DiscoverWifiP2PService;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * The main activity of the application. The UI has one main view, of which is a textview, detailing the state (infected, or clean) of the player.

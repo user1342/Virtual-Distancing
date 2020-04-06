@@ -6,14 +6,14 @@ import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceInfo;
 import android.provider.Settings;
 import android.util.Log;
 
-import me.jamesstevenson.infection.BuildConfig;
-import me.jamesstevenson.infection.R;
-import me.jamesstevenson.infection.utils.MultipleUse;
-
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.HashMap;
 import java.util.Map;
+
+import me.jamesstevenson.infection.BuildConfig;
+import me.jamesstevenson.infection.R;
+import me.jamesstevenson.infection.utils.MultipleUse;
 
 /**
  * This class is used when creating a wifi p2p network service.
@@ -28,6 +28,7 @@ public class RegisterWifiP2PService {
 
     /**
      * Constructor
+     *
      * @param context
      */
     public RegisterWifiP2PService(Context context) {
@@ -42,6 +43,7 @@ public class RegisterWifiP2PService {
 
     /**
      * Returns the next un used port
+     *
      * @return the next un used port
      */
     private static int getPort() {
@@ -101,7 +103,7 @@ public class RegisterWifiP2PService {
     }
 
     /**
-     *  Registers the network service.
+     * Registers the network service.
      */
     public void startRegistration() {
         //  Create a string map containing information about your service.

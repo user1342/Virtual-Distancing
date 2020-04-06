@@ -6,11 +6,11 @@ import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceRequest;
 import android.util.Log;
 
+import java.util.Map;
+
 import me.jamesstevenson.infection.BuildConfig;
 import me.jamesstevenson.infection.R;
 import me.jamesstevenson.infection.utils.InfectedStateManager;
-
-import java.util.Map;
 
 /**
  * This class utilises WiFi P2P Network Service discovery to find nearby devices broadcasting network services.
@@ -25,6 +25,7 @@ public class DiscoverWifiP2PService {
 
     /**
      * Constructor
+     *
      * @param context
      */
     public DiscoverWifiP2PService(Context context) {

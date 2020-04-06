@@ -42,6 +42,9 @@
         </receiver>
 
         <receiver android:name=".receivers.IsCuredAlarmReceiver" />
+        <receiver
+            android:name=".receivers.MainAlarmReceiver"
+            android:process=":remote" />
 
         <service android:name=".services.ForegroundServiceManager" />
     </application>

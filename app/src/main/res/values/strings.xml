@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Digital Distancing</string>
+    <string name="app_name">Virtual Distancing</string>
     <string name="clean_tag">Clean</string>
     <string name="infected_tag">Infected</string>
     <string name="self_infect_multiple">\ taps before self-infection. There\'s no going back.</string>
@@ -9,4 +9,5 @@
     <string name="recoup_message">You are now cured. Be careful, you\'re still not immune.</string>
     <string name="you_are">You are </string>
     <string name="exclamation">!</string>
+    <string name="heart_icon">heart icon</string>
 </resources>

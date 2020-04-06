@@ -1,5 +1,7 @@
 package com.example.infection.utils;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -7,21 +9,50 @@ import android.util.Log;
 
 import com.example.infection.BuildConfig;
 import com.example.infection.R;
+import com.example.infection.receivers.MainAlarmReceiver;
 import com.example.infection.services.ForegroundServiceManager;
-import com.example.infection.wifip2p.DiscoverServices;
-import com.example.infection.wifip2p.RegisterNetworkService;
 
 /**
  * This class is used for the tasking of work. This primarily involves the
  */
 public class TaskManager {
 
+    String TAG = this.getClass().getSimpleName();
+
+    public void startPeriodicWork(Context context) {
+
+        Log.v(TAG, "Starting periodic work");
+
+        // Construct an intent that will execute the AlarmReceiver
+        Intent intent = new Intent(context, MainAlarmReceiver.class);
+
+        // Create a PendingIntent to be triggered when the alarm goes off
+        final PendingIntent pIntent = PendingIntent.getBroadcast(context, MainAlarmReceiver.REQUEST_CODE,
+                intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        // Setup periodic alarm every every half hour from this point onwards
+        long firstMillis = System.currentTimeMillis(); // alarm is set right away
+        AlarmManager alarm = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+        // First parameter is the type: ELAPSED_REALTIME, ELAPSED_REALTIME_WAKEUP, RTC_WAKEUP
+        // Interval can be INTERVAL_FIFTEEN_MINUTES, INTERVAL_HALF_HOUR, INTERVAL_HOUR, INTERVAL_DAY
+
+        if (alarm != null) {
+            alarm.setInexactRepeating(AlarmManager.RTC_WAKEUP, firstMillis,
+                    60 * 1000, pIntent);
+        }
+
+    }
+
+
     /**
      * This sets up the alarm manager.
      *
      * @param context
      */
-    public void initialiseWork(Context context) {
+    public void startForeGroundService(Context context) {
+
+        Log.v(TAG, "Starting foreground service");
 
         Intent i = new Intent(context, ForegroundServiceManager.class);
         // Start the service
@@ -46,22 +77,18 @@ public class TaskManager {
      */
     public void run(Context context) {
 
-        // Irrespective of state unregisters the current network service.
-        RegisterNetworkService registerNetworkService = new RegisterNetworkService(context);
-        registerNetworkService.unregisterService();
+        // Checks if cured and if so cures.
+        if (InfectedStateManager.isCured(context) && InfectedStateManager.getCurrentState(context).equals(context.getString(R.string.infected_tag))) {
 
-        String state = InfectedStateManager.getCurrentState(context); //Defaults to clean if doesn't have one.
+            InfectedStateManager infectedStateManager;
+            infectedStateManager = new InfectedStateManager(context);
+            infectedStateManager.setNewState(context.getString(R.string.clean_tag), true);
 
-        // If we're clean then we need to look for other networks, if we're infected we need to create a network.
-        if (state.equals(context.getString(R.string.clean_tag))) {
-            DiscoverServices discoverServices = new DiscoverServices(context);
-            discoverServices.initializeDiscoveryListener();
-            discoverServices.discover();
-            discoverServices.removeDiscoveryListener();
-        } else if (state.equals(context.getString(R.string.infected_tag))) {
-            registerNetworkService.initializeServerSocket();
-            registerNetworkService.initializeRegistrationListener();
-            registerNetworkService.registerService(registerNetworkService.localPort, state);
+        } else {
+            // set state to be current state
+            String currentState = InfectedStateManager.getCurrentState(context);
+            InfectedStateManager infectedStateManager = new InfectedStateManager(context);
+            infectedStateManager.setNewState(currentState, true);
         }
 
 

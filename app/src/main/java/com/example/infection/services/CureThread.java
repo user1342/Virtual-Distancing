@@ -52,6 +52,6 @@ public class CureThread extends Thread {
 
 
         TaskManager taskManager = new TaskManager();
-        taskManager.initialiseWork(context);
+        taskManager.startForeGroundService(context);
     }
 }

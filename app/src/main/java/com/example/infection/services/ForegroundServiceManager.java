@@ -28,11 +28,6 @@ public class ForegroundServiceManager extends Service {
     public void onCreate() {
         super.onCreate();
 
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-
         if (BuildConfig.DEBUG) {
             Log.v(BuildConfig.APPLICATION_ID, "Foreground Service Is Now Running");
         }
@@ -43,13 +38,18 @@ public class ForegroundServiceManager extends Service {
 
         // Notification required for foreground service.
         Notification notification = new NotificationCompat.Builder(getApplicationContext(), MultipleUse.CHANNEL_ID)
-                .setContentTitle("Digital Distancing Scanner")
+                .setContentTitle(MultipleUse.getApplicationName(getApplicationContext()) + " Scanner")
                 .setContentText("Checking for nearby infected devices...")
-                .setSmallIcon(R.drawable.ic_warning_black_24dp)
+                .setSmallIcon(R.mipmap.ic_launcher_foreground)
                 .setContentIntent(pendingIntent)
                 .build();
 
         startForeground(1, notification);
+
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
 
         // Checks if cured and if so cures.
         if (InfectedStateManager.isCured(getApplicationContext()) && InfectedStateManager.getCurrentState(getApplicationContext()).equals(getApplicationContext().getString(R.string.infected_tag))) {
@@ -60,8 +60,8 @@ public class ForegroundServiceManager extends Service {
 
         }
 
-        TaskManager taskManager = new TaskManager();
-        taskManager.run(getApplicationContext());
+        TaskManager thread = new TaskManager();
+        thread.run(getApplicationContext());
 
 
         // Updates broadcast receiver if state has changed.
@@ -69,9 +69,7 @@ public class ForegroundServiceManager extends Service {
         Intent intent2 = new Intent(BuildConfig.APPLICATION_ID);
         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent2);
 
-
-        //todo because the service isn't getting run we're not updating the iscured stuff. todo put a call for it in the listener
-
+        Log.v("Test", "-----");
         //stopSelf();
 
         return START_NOT_STICKY;

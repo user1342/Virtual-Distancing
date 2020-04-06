@@ -18,6 +18,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.example.infection.utils.InfectedStateManager;
 import com.example.infection.utils.MultipleUse;
 import com.example.infection.utils.TaskManager;
+import com.example.infection.wifip2p.DiscoverWifiP2PService;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -38,6 +39,9 @@ public class MainActivity extends AppCompatActivity {
     public BroadcastReceiver updateUiBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+
+            // Updates this variable back to 5 when the UI gets updated.
+            clicksBeforeInfected = 5;
 
             if (BuildConfig.DEBUG) {
                 Log.v(BuildConfig.APPLICATION_ID, "Received Local Broadcast Receiver");
@@ -75,9 +79,13 @@ public class MainActivity extends AppCompatActivity {
         //Sets up local broadcast receiver used for updating the UI.
         LocalBroadcastManager.getInstance(this).registerReceiver(updateUiBroadcastReceiver, new IntentFilter(BuildConfig.APPLICATION_ID));
 
-        // This sets up a foreground service.
+        //required before using discovery
+        DiscoverWifiP2PService discoverWifiP2PService = new DiscoverWifiP2PService(getApplicationContext());
+        discoverWifiP2PService.setupDiscovery();
+
         TaskManager taskManager = new TaskManager();
-        taskManager.initialiseWork(getApplicationContext());
+        taskManager.startPeriodicWork(getApplicationContext());
+        taskManager.run(getApplicationContext());
     }
 
     @Override

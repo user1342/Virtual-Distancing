@@ -15,14 +15,15 @@ import com.example.infection.BuildConfig;
 import com.example.infection.MainActivity;
 import com.example.infection.R;
 import com.example.infection.receivers.IsCuredAlarmReceiver;
-import com.example.infection.wifip2p.RegisterNetworkService;
+import com.example.infection.wifip2p.DiscoverWifiP2PService;
+import com.example.infection.wifip2p.RegisterWifiP2PService;
 
 /**
  * This class is used to manage the state of the user (infected, clean). In turn sending notifications, updating shared prefs, etc.
  */
 public class InfectedStateManager {
 
-    private static final long TWO_WEEKS_IN_MILLIS = 1209600000; // todo replace 1209600000
+    private static final long TWO_WEEKS_IN_MILLIS = 1209600000;
 
     public String state;
     private Context context;
@@ -105,6 +106,7 @@ public class InfectedStateManager {
      * @param canRevert
      */
     public void setNewState(String newState, boolean canRevert) {
+
         if (newState == null) {
             state = getCurrentState(context);
         } else {
@@ -117,6 +119,7 @@ public class InfectedStateManager {
                 state = context.getString(R.string.infected_tag);
 
                 if (!getCurrentState(context).equals(state)) {
+                    // don't create new service unless was first time changed from cured to infected.
                     updateService(true); // Dont before updating the shared pref so that it can use the old name to de register the service
                     updateStateSharedPref(context, state);
                     updateRecouperationSharedPref();
@@ -126,9 +129,18 @@ public class InfectedStateManager {
                 }
             } else if (newState.contains(context.getString(R.string.clean_tag)) && canRevert) {
 
+                //unregister any current services as we're clean
+                RegisterWifiP2PService resisterNetworkService = new RegisterWifiP2PService(context);
+
+
+                resisterNetworkService.unRegister();
                 if (BuildConfig.DEBUG) {
                     Log.v(BuildConfig.APPLICATION_ID, "Setting state to clean");
                 }
+
+                // Make sure that if cured discover
+                DiscoverWifiP2PService discoverWifiP2PService = new DiscoverWifiP2PService(context);
+                discoverWifiP2PService.discovery();
 
                 state = context.getString(R.string.clean_tag);
 
@@ -172,7 +184,7 @@ public class InfectedStateManager {
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, MultipleUse.CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_warning_black_24dp)
+                .setSmallIcon(R.mipmap.ic_launcher_foreground)
                 .setContentTitle(state.toUpperCase())
                 .setContentText(context.getString(R.string.you_are) + " " + verb + context.getString(R.string.exclamation))
                 .setContentIntent(pendingIntent)
@@ -187,13 +199,11 @@ public class InfectedStateManager {
      * Removes the current network services and creates a new one for the new state.
      */
     private void updateService(boolean startNew) {
-        RegisterNetworkService resisterNetworkService = new RegisterNetworkService(context);
-        resisterNetworkService.unregisterService();
+
+        RegisterWifiP2PService resisterNetworkService = new RegisterWifiP2PService(context);
 
         if (startNew) {
-            resisterNetworkService.initializeServerSocket();
-            resisterNetworkService.initializeRegistrationListener();
-            resisterNetworkService.registerService(resisterNetworkService.localPort, state);
+            resisterNetworkService.startRegistration();
         }
     }
 

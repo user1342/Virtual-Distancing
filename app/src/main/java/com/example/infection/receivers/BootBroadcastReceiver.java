@@ -9,6 +9,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.example.infection.BuildConfig;
 import com.example.infection.utils.TaskManager;
+import com.example.infection.wifip2p.DiscoverWifiP2PService;
 
 /**
  * Starts up the application after device reboot.
@@ -32,8 +33,11 @@ public class BootBroadcastReceiver extends BroadcastReceiver {
                     Log.v(BuildConfig.APPLICATION_ID, "Starting Up, via BootComplete.");
                 }
 
+                DiscoverWifiP2PService discoverWifiP2PService = new DiscoverWifiP2PService(context);
+                discoverWifiP2PService.setupDiscovery();
+
                 TaskManager taskManager = new TaskManager();
-                taskManager.initialiseWork(context);
+                taskManager.startPeriodicWork(context);
                 taskManager.run(context);
             }
 

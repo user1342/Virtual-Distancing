@@ -3,6 +3,7 @@ package com.example.infection.utils;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
 import android.os.Build;
 
 import com.example.infection.BuildConfig;
@@ -28,6 +29,12 @@ public class MultipleUse {
                 notificationManager.createNotificationChannel(channel);
             }
         }
+    }
+
+    public static String getApplicationName(Context context) {
+        ApplicationInfo applicationInfo = context.getApplicationInfo();
+        int stringId = applicationInfo.labelRes;
+        return stringId == 0 ? applicationInfo.nonLocalizedLabel.toString() : context.getString(stringId);
     }
 
 }

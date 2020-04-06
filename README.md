@@ -1,6 +1,6 @@
 # Virtual Distancing
 
-<img align="right" width="100" height="100" src="media\Sprite_heart.png">
+<img align="right" width="150" height="150" src="media\heart.png">
 
 A simple geo-based game and educational tool about infection. The game has one aim... don't get infected.
 

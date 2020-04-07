@@ -11,7 +11,7 @@
 
 A simple geo-location based game and educational tool about infection. The game has one aim... don't get infected.
 
-The infection spreads between Android devices with the appication installed and follows the below rules:
+The infection spreads between Android devices with the application installed and follows the below rules:
 - It will only transmit if both devices have Wi-Fi enabled. 
 - It can transmit to devices up to 200 meters away.
 - It can take up to a minute to contract.

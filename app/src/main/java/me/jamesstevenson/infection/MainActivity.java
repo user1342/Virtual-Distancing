@@ -139,6 +139,7 @@ public class MainActivity extends AppCompatActivity {
         // If infected and the user holds the text for 10 seconds they get cured.
         textView.setOnTouchListener(new View.OnTouchListener() {
 
+            // A handler that is triggered after the 10 second wait
             final Handler handler = new Handler();
             Runnable mLongPressed = new Runnable() {
                 public void run() {
@@ -149,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             };
 
+            // when the text view is touched and held for 10 seconds. If finger leaves before that the handler is cancelled.
             @Override
             public boolean onTouch(View v, MotionEvent event) {
 

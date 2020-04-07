@@ -1,4 +1,7 @@
-# Virtual Distancing
+<p align="center">
+    <img width=100% src="/media/banner.png">
+  </a>
+</p>
 
 <img align="right" width="150" height="150" src="media\heart.png">
 
@@ -8,14 +11,14 @@ The infection spreads between Android devices with **Wi-Fi enabled** and follows
 - It can transmit to devices up to 200 meters away.
 - It can take up to a minute to contract.
 - Once contracted it takes two weeks to be cured.
-<br>
+
 <p align="center">
-  <img src="/media/screenshot_2.png" width="200" />
-  <img src="/media/screenshot_5.png" width="200" />
-  <img src="/media/screenshot_1.jpg" width="200" />
-  <img src="/media/screenshot_4.png" width="200" />
+  <img src="/media/screenshot_2.png" width="100" />
+  <img src="/media/screenshot_5.png" width="100" />
+  <img src="/media/screenshot_1.jpg" width="100" />
+  <img src="/media/screenshot_4.png" width="100" />
 </p>
-<br>
+
 Virtual Distancing can be used as a long range game of tag, capture the flag game, or as an educational tool to show how infection works.
 
 ## The Internals

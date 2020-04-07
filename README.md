@@ -20,7 +20,7 @@ This application uses [WiFi Direct](https://developer.android.com/training/conne
 To get the ball rolling you can self-infect your device by clicking on the screen 5 times.
 
 ### Recovery
-After becoming infected a device is cured after two weeks. This is done via an Alarm Receiver which is setup when the device is infected.
+After becoming infected a device is cured after two weeks. This is done via an Alarm Receiver which is setup when the device is infected. You can also expedite recovery by long pressing on the text view for 10 seconds when in the infected state. 
 
 ## Thanks
 Thanks to [pixelsapphire](https://pixelsapphire.itch.io/pixel-16x16-heart) for the logo.

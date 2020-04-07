@@ -10,10 +10,10 @@ The infection spreads between Android devices with **Wi-Fi enabled** and follows
 - Once contracted it takes two weeks to be cured.
 <br>
 <p align="center">
-  <img src="/media/screenshot_2.png" width="100" />
-  <img src="/media/screenshot_5.png" width="100" />
-  <img src="/media/screenshot_1.jpg" width="100" />
-  <img src="/media/screenshot_4.png" width="100" />
+  <img src="/media/screenshot_2.png" width="200" />
+  <img src="/media/screenshot_5.png" width="200" />
+  <img src="/media/screenshot_1.jpg" width="200" />
+  <img src="/media/screenshot_4.png" width="200" />
 </p>
 <br>
 Virtual Distancing can be used as a long range game of tag, capture the flag game, or as an educational tool to show how infection works.

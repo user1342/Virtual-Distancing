@@ -1,5 +1,6 @@
 package me.jamesstevenson.infection;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -7,7 +8,9 @@ import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -110,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Sets the UI to the respective colour for the specific state the device is in (Infected / or clean).
      */
+    @SuppressLint("ClickableViewAccessibility")
     public void updateUi() {
         hideSystemUI();
         setContentView(R.layout.activity_main);
@@ -131,6 +135,31 @@ public class MainActivity extends AppCompatActivity {
             textView.setTextSize(60);
             getWindow().getDecorView().setBackgroundColor(Color.BLACK);
         }
+
+        // If infected and the user holds the text for 10 seconds they get cured.
+        textView.setOnTouchListener(new View.OnTouchListener() {
+
+            final Handler handler = new Handler();
+            Runnable mLongPressed = new Runnable() {
+                public void run() {
+                    if (InfectedStateManager.getCurrentState(getApplicationContext()).equals(getString(R.string.infected_tag))) {
+                        Toast.makeText(getApplicationContext(), "Cure Expedited!", Toast.LENGTH_LONG).show();
+                        infectedStateManager.setNewState(getString(R.string.clean_tag), true);
+                    }
+                }
+            };
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                if(event.getAction() == MotionEvent.ACTION_DOWN)
+                    handler.postDelayed(mLongPressed, 10000);
+                if((event.getAction() == MotionEvent.ACTION_UP)||(event.getAction() ==     MotionEvent.ACTION_UP))
+                    handler.removeCallbacks(mLongPressed);
+                return false;
+            }
+        });
+
 
         // Sets up an on click listener for the text view so that people can self-infect.
         textView.setOnClickListener(new View.OnClickListener() {

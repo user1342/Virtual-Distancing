@@ -27,7 +27,9 @@ The infection spreads between Android devices with the application installed and
 </p>
 <br>
 
-Virtual Distancing can be used as a long range game of tag, capture the flag game, or as an educational tool to show how infection works.
+Virtual Distancing can be used as a long range game of tag, capture the flag game, or as an educational tool to show how infection works. 
+
+To start the ball rolling click the 'Clean' icon 5 times to infect your device. 👋 Then hold the 'Infected' icon for 10 seconds if you want to cure it again. 
 
 ## The Internals
 This application uses [WiFi Direct](https://developer.android.com/training/connect-devices-wirelessly/wifi-direct) (Also known as WiFiP2P) to find nearby devices up to 200 meters away. A device can be in one of two states, infected and clean. An infected device sets up a WifiP2P network service broadcasting that it is infected, while a clean device searches for these network services and if it finds one then also becomes infected. A foreground service is setup which listens for these nearby Network Services.

@@ -3,6 +3,10 @@
   </a>
 </p>
 
+<br>
+
+# Virtual Distancing
+
 <img align="right" width="150" height="150" src="media\heart.png">
 
 A simple geo-location based game and educational tool about infection. The game has one aim... don't get infected.

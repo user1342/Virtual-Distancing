@@ -2,7 +2,7 @@
 
 <img align="right" width="150" height="150" src="media\heart.png">
 
-A simple geo-based game and educational tool about infection. The game has one aim... don't get infected.
+A simple geo-location based game and educational tool about infection. The game has one aim... don't get infected.
 
 The infection spreads between Android devices with **Wi-Fi enabled** and follows the below rules:
 - It can transmit to devices up to 200 meters away.

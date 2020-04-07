@@ -2,6 +2,7 @@
     <img width=100% src="/media/banner.png">
   </a>
 </p>
+<p align="center"> 🩺 The game has one aim... don't get infected. 💉</p>
 
 <br>
 
@@ -12,10 +13,10 @@
 A simple geo-location based game and educational tool about infection. The game has one aim... don't get infected.
 
 The infection spreads between Android devices with the application installed and follows the below rules:
-- It will only transmit if both devices have Wi-Fi enabled. 
-- It can transmit to devices up to 200 meters away.
-- It can take up to a minute to contract.
-- Once contracted it takes two weeks to be cured.
+- It will only transmit if both devices have Wi-Fi enabled. 📡
+- It can transmit to devices up to 200 meters away. 🏃‍♀️
+- It can take up to a minute to contract. ⌚
+- Once infected it takes two weeks to be cured. 📅
 
 <br>
 <p align="center">

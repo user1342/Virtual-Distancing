@@ -2,7 +2,7 @@
     <img width=100% src="/media/banner.png">
   </a>
 </p>
-<p align="center"> 🩺 The game has one aim... don't get infected. 💉</p>
+<p align="center"> 💊 The game has one aim... don't get infected. 💉</p>
 
 <br>
 
